@@ -1,23 +1,21 @@
 <header class="navbar">
   <!-- Logo -->
   <div class="logo">
-    <a href= "/" style="text-decoration: none;"><h2>Ayur Herbals</h2></a>
+    <a href= "" style="text-decoration: none;"><h2>Ayur Herbals</h2></a>
   </div>
 
   <!-- Navigation Links -->
   <nav class="nav-links">
     <a routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Home</a>
-    <a routerLink="/product-list" routerLinkActive="active">Shop</a>
-    <a routerLink="/blogs" routerLinkActive="active">Blogs</a>
-    <a routerLink="/success-stories" routerLinkActive="active">Success Stories</a>
-    <a routerLink="/about" routerLinkActive="active">About Us</a>
-    <a routerLink="/contact" routerLinkActive="active">Contact</a>
+    <a routerLink="/products" routerLinkActive="active">Products</a>
+    <a routerLink="/blog" routerLinkActive="active">Blogs</a>
+    <a routerLink="/contact-us" routerLinkActive="active">Contact</a>
   </nav>
 
   <!-- Right side: Search, Cart, Login -->
   <div class="nav-actions">
     <input type="text" placeholder="Search..." class="search-bar" />
     <a class="cart">🛒 Cart</a>
-    <button class="login-btn" routerLink="/auth">Login / Signup</button>
+    <button class="login-btn" routerLink="/login">Login / Signup</button>
   </div>
 </header>
