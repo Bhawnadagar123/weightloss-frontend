@@ -1,0 +1,259 @@
+/* navbar.component.css */
+
+/* ROOT CONTAINER */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+  background: linear-gradient(180deg, #e78686, #d06d6d);
+  border-bottom: 1px solid #e6e6e6;
+  padding: 8px 12px;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+}
+
+/* INNER FLEX LAYOUT */
+.navbar-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* LOGO - always on extreme left */
+.logo {
+  flex-shrink: 0;
+  
+}
+.logo h2 {
+  margin: 0;
+  color: #2e7d32; /* herbal green */
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* HAMBURGER (MOBILE) */
+.hamburger {
+  background: none;
+  border: none;
+  font-size: 24px;
+  display: inline-block;
+  padding: 6px;
+  cursor: pointer;
+}
+.hamburger span.open {
+  transform: rotate(90deg);
+}
+
+/* NAVIGATION LINKS - hidden on mobile */
+.nav-links {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 64px;
+  background: #fff;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  text-align: center;
+}
+
+/* When open (on mobile) */
+.nav-links.open {
+  display: flex;
+}
+
+/* LINK STYLE */
+.nav-links a {
+  text-decoration: none;
+  color: #2b2b2b;         /* default text color */
+  font-weight: 600;
+  padding: 8px 10px;
+  border-radius: 6px;
+  transition: color 0.2s ease;
+}
+.nav-links a.active,
+.nav-links a:hover {
+  color: #2e7d32;         /* only text color changes */
+  background: transparent;
+}
+
+/* RIGHT ACTIONS - search, cart, login */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* SEARCH BAR */
+.search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 22px;
+  border: 1px solid #e0e0e0;
+}
+.search-bar {
+  border: none;
+  padding: 8px 12px;
+  width: 120px;
+  outline: none;
+  border-radius: 22px;
+  font-size: 14px;
+}
+.search-btn {
+  border: none;
+  background: transparent;
+  padding: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* DROPDOWN SUGGESTIONS */
+.suggestions {
+  position: absolute;
+  top: 42px;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  list-style: none;
+  margin: 6px 0 0 0;
+  padding: 6px 0;
+  z-index: 1200;
+  max-height: 260px;
+  overflow-y: auto;
+}
+.suggestions li {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 8px;
+  cursor: pointer;
+}
+.suggestions li:hover {
+  background: #f6f6f6;
+}
+.suggestions img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.s-text {
+  flex: 1;
+  min-width: 0;
+}
+.s-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: #222;
+}
+.s-sub {
+  font-size: 12px;
+  color: #666;
+}
+.s-price {
+  font-weight: 700;
+  color: #111;
+  font-size: 13px;
+}
+
+/* CART */
+.cart {
+  text-decoration: none;
+  color: #2b2b2b;
+  font-size: 20px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.cart-count {
+  background: #e53935;
+  color: #fff;
+  font-weight: 700;
+  font-size: 11px;
+  padding: 3px 6px;
+  border-radius: 999px;
+  margin-left: 6px;
+}
+
+/* LOGIN BUTTON */
+.login-btn {
+  background: #2e7d32;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.login-btn:hover {
+  background: #256428;
+}
+
+/* ---------------- DESKTOP LAYOUT ---------------- */
+@media (min-width: 768px) {
+  .hamburger {
+    display: none;
+  }
+
+  .navbar-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  
+  /* Layout: Logo left, everything else right */
+  .navbar-inner > .logo {
+    margin-right: auto; /* pushes others to the right */
+  }
+
+  /* Nav links + actions all on right side in one row */
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .nav-links {
+    position: static;
+    display: flex !important;
+    flex-direction: row;
+    gap: 18px;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .nav-links a {
+    color: #333;
+    font-weight: 600;
+  }
+
+  .nav-links a:hover,
+  .nav-links a.active {
+    color: #2e7d32;
+    background: transparent;
+  }
+
+  .search-bar {
+    width: 180px;
+  }
+
+  .navbar {
+    background: linear-gradient(180deg, #e78686, #d06d6d);
+  }
+
+  .suggestions {
+    max-width: 480px;
+    right: auto;
+  }
+}

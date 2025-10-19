@@ -1,0 +1,131 @@
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  padding: 20px;
+}
+
+.auth-card {
+  background: #fff;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+.auth-card h1 {
+  margin-bottom: 20px;
+  font-size: 28px;
+  color: #2c3e50;
+}
+
+.auth-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.auth-card input {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.auth-card button {
+  padding: 14px;
+  background: #27ae60;
+  color: white;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.auth-card button:hover {
+  background: #219150;
+}
+
+.switch-text {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #555;
+}
+
+.switch-text a {
+  color: #27ae60;
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.switch-text a:hover {
+  text-decoration: underline;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.why-choose-us {
+  text-align: center;
+  padding: 60px 20px;
+  background: #f9f9f9;
+}
+
+.why-choose-us h2 {
+  font-size: 2rem;
+  margin-bottom: 40px;
+  color: #2c3e50;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 30px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.feature {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease;
+}
+
+.feature:hover {
+  transform: translateY(-8px);
+}
+
+.feature img {
+  width: 60px;
+  margin-bottom: 15px;
+}
+
+.feature h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #27ae60;
+}
+
+.feature p {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+

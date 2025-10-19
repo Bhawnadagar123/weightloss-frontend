@@ -1,0 +1,61 @@
+<header class="navbar">
+  <div class="navbar-inner">
+    <!-- Left: Logo -->
+    <div class="logo">
+      <a routerLink="/" style="text-decoration: none;" (click)="closeMenu()">
+        <h2>Ayurs & Herbals</h2>
+      </a>
+    </div>
+
+    <!-- Mobile hamburger -->
+    <button class="hamburger" aria-label="Toggle menu" (click)="toggleMenu()">
+      <span [class.open]="menuOpen">☰</span>
+    </button>
+
+    <!-- Center: Links (desktop) / collapsible (mobile) -->
+    <nav class="nav-links" [class.open]="menuOpen">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">Home</a>
+      <a routerLink="/product-list" routerLinkActive="active" (click)="closeMenu()">Shop</a>
+      <a routerLink="/blogs" routerLinkActive="active" (click)="closeMenu()">Blogs</a>
+      <a routerLink="/success-stories" routerLinkActive="active" (click)="closeMenu()">Success Stories</a>
+      <a routerLink="/about" routerLinkActive="active" (click)="closeMenu()">About</a>
+      <a routerLink="/contact" routerLinkActive="active" (click)="closeMenu()">Contact</a>
+    </nav>
+
+    <!-- Right: Search + Cart + Login -->
+    <div class="nav-actions">
+      <div class="search-wrap">
+        <input
+          type="text"
+          class="search-bar"
+          placeholder="Search products..."
+          [(ngModel)]="searchQuery"
+          (input)="onQueryChanged($event.target.value)"
+          (focus)="showSuggestions = true"
+          (blur)="onSearchBlur()"
+          aria-label="Search products"
+        />
+        <button class="search-btn" (click)="onSearch()">🔍</button>
+
+        <!-- Suggestions dropdown -->
+        <ul class="suggestions" *ngIf="showSuggestions && suggestions?.length">
+          <li *ngFor="let s of suggestions" (mousedown)="selectSuggestion(s)">
+            <img *ngIf="s.images?.length" [src]="imgUrl(s.images[0])" alt="{{s.name}}" />
+            <div class="s-text">
+              <div class="s-name">{{ s.name }}</div>
+              <div class="s-sub">{{ s.subDescription || s.description }}</div>
+            </div>
+            <div class="s-price">₹{{ s.price | number:'1.0-0' }}</div>
+          </li>
+        </ul>
+      </div>
+
+      <a routerLink="/cart" class="cart" (click)="closeMenu()">
+        🛒
+        <span class="cart-count" *ngIf="cartCount > 0">{{ cartCount }}</span>
+      </a>
+
+      <button class="login-btn" routerLink="/auth" (click)="closeMenu()">Login / Signup</button>
+    </div>
+  </div>
+</header>

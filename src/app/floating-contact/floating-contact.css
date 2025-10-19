@@ -1,0 +1,80 @@
+/* Base Floating Buttons */
+.floating-buttons {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 999;
+}
+
+.left-side {
+  left: 15px;
+}
+
+.right-side {
+  right: 15px;
+}
+
+.floating-buttons a {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  background: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: transform 0.2s, background 0.2s;
+}
+
+.phone-btn {
+  color: #007bff;
+  border: 2px solid #007bff;
+}
+
+.whatsapp-btn {
+  color: #25d366;
+  border: 2px solid #25d366;
+}
+
+/* Hover effect */
+.floating-buttons a:hover {
+  transform: scale(1.1);
+  background: #f9f9f9;
+}
+
+/* Tooltip Styling */
+.tooltip {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  background: #333;
+  color: #fff;
+  font-size: 13px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s;
+}
+
+/* Position tooltips */
+.left-side .tooltip {
+  left: 60px; /* appears to the right of phone */
+}
+
+.right-side .tooltip {
+  right: 60px; /* appears to the left of WhatsApp */
+}
+
+/* Show tooltip on hover */
+.floating-buttons a:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+}
