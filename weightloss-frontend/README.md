@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-# AyurHerbalsApp
+# WeightlossFrontend
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.2.2.
 
@@ -58,7 +57,3 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
-=======
-# weightloss-frontend
-Frontend application for Weight Loss Website (Angular)
->>>>>>> 381e811b76f3c1a180181de3cc6bde7536f93378
