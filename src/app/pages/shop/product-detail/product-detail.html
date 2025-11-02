@@ -1,141 +1,103 @@
-<section class="product-detail">
+<!-- product-detail.component.html -->
+<section class="pd-page" *ngIf="product as p; else loadingTpl">
+  <div class="container">
+    <!-- breadcrumb -->
+    <nav class="breadcrumb">
+      <a routerLink="/">Home</a>
+      <span>›</span>
+      <a routerLink="/product-list">All Products</a>
+      <span>›</span>
+      <span class="current">{{ p?.name }}</span>
+    </nav>
 
-    <!-- Hero Section -->
-    <div class="product-hero">
-        <div class="product-image">
-            <!-- <img [src]="product.image" alt="{{ product.name }}"> -->
-            <div class="product-gallery">
-                <!-- Main Image -->
-                <div class="main-image">
-                    <button class="arrow left" (click)="prevImage()">&#10094;</button>
-                    <img [src]="images[currentIndex]" alt="Product Image">
-                    <button class="arrow right" (click)="nextImage()">&#10095;</button>
-                </div>
-
-                <!-- Thumbnails -->
-                <div class="thumbnails">
-                    <img *ngFor="let img of images; let i = index" [src]="img" [class.active]="i === currentIndex"
-                        (click)="setImage(i)">
-                </div>
-            </div>
-
+    <div class="pd-grid">
+      <!-- LEFT: Image gallery -->
+      <div class="pd-gallery">
+        <div class="main-image">
+          <button class="arrow left" (click)="prevImage()" aria-label="Previous image">‹</button>
+          <img
+            [src]="imgUrl(currentImage)"
+            [alt]="p?.name"
+            (error)="onImgError($event)"
+            class="main-img"
+          />
+          <button class="arrow right" (click)="nextImage()" aria-label="Next image">›</button>
         </div>
 
-        <div class="product-info">
-            <h1>{{ product.name }}</h1>
-            <div class="stars">★★★★★ 954</div>
-            <p class="price"> MRP
-                <span style="text-decoration: line-through;color: #b4b4b4">Rs. {{ product.mrp }} </span>
-                <span>Rs. {{ product.offerPrice }} </span>
-            </p>
-            <p>Size: 60 Capsules</p>
-            <p>Quantity</p>
-            <div class="quantity-selector">
-                <button (click)="decreaseQuantity()">-</button>
-                <input type="text" [value]="quantity" readonly>
-                <button (click)="increaseQuantity()">+</button>
-            </div>
+        <div class="thumbs">
+          <button
+            *ngFor="let img of product?.images; let i = index"
+            class="thumb-btn"
+            [class.active]="i === currentIndex"
+            (click)="goToImage(i)"
+            aria-label="Show image {{ i + 1 }}"
+          >
+            <img [src]="imgUrl(img)" [alt]="p?.name + ' thumb ' + (i+1)" (error)="onImgError($event)"/>
+          </button>
+        </div>
+      </div>
 
-            <button class="add-to-cart-btn" (click)="addToCart()">
-                Add to Cart
+      <!-- RIGHT: Product info -->
+      <div class="pd-info">
+        <h1 class="pd-title">{{ p?.name }}</h1>
+
+        <div class="pd-meta">
+          <div class="price-row">
+            <div class="price">₹{{ p?.price | number:'1.0-0' }}</div>
+            <div class="mrp" *ngIf="p?.mrp">₹{{ p?.mrp | number:'1.0-0' }}</div>
+            <div class="discount" *ngIf="product && product.mrp != null && product.price != null && product.mrp > product.price">
+              {{ calcDiscount(product.mrp, product.price) }}% OFF
+            </div>
+          </div>
+
+          <div class="stock" [class.out]="(p?.stock ?? 0) === 0">
+            <span *ngIf="(product?.stock ?? 0) > 0">In stock: {{ p?.stock ?? 0 }}</span>
+            <span *ngIf="(product?.stock ?? 0) === 0">Out of stock</span>
+          </div>
+        </div>
+
+        <p class="subdesc" *ngIf="product?.subDescription">{{ p?.subDescription }}</p>
+
+        <div class="qty-add">
+            <div class="qty">
+  <button (click)="decreaseQty()" [disabled]="qty <= 1">−</button>
+  <input type="number" [value]="qty" (input)="onQtyInput($event)" min="1" [max]="p?.stock || 9999" />
+  <button (click)="increaseQty()" [disabled]="p.stock ? qty >= p.stock : false">+</button>
+</div>
+
+          <div class="actions">
+            <button class="btn primary" (click)="onAddToCart()" [disabled]="adding || p?.stock === 0">
+              {{ adding ? 'Adding...' : 'Add to Cart' }}
             </button>
-
-
-            <button class="add-to-cart-btn">Buy it now</button>
-
-            <p class="short-desc">
-                {{ product.shortDescription }}
-            </p>
-            <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
-                <img src="/assets/Shipping_Service.png" alt="Shipping Service" style="width: 40px;">
-                <h3>{{product.orderNow}}</h3>
-            </div>
-            <div class="info-box">
-                <img src="/assets/Girl_icon.png" alt="Ask Our Expert" class="info-img">
-
-                <div class="info-text">
-                    <h3>Are you confused?</h3>
-                    <p>Ask our experts. Call us at: 7982580628</p>
-                    <!-- <p class="phone">7982580628</p> -->
-                    <a href="tel:7982580628" class="call-btn">📞 Click here to call us now</a>
-                </div>
-            </div>
+            <button class="btn outline" (click)="onBuyNow()" [disabled]="p?.stock === 0">Buy Now</button>
+          </div>
         </div>
-    </div>
 
-    <!-- Benefits -->
-    <div class="product-section">
-        <h2>Benefits</h2>
-        <ul>
-            <li *ngFor="let benefit of product.benefits">{{ benefit }}</li>
-        </ul>
-    </div>
-
-    <!-- Ingredients -->
-    <div class="product-section">
-        <h2>Ingredients</h2>
-        <ul>
-            <li *ngFor="let ingredient of product.ingredients">{{ ingredient }}</li>
-        </ul>
-    </div>
-
-    <!-- How to Use -->
-    <div class="product-section">
-        <h2>How to Use</h2>
-        <p>{{ product.usage }}</p>
-    </div>
-
-    <!-- Bundles -->
-    <div class="product-section bundles">
-        <h2>Bundles & Packs</h2>
-        <div class="bundle-grid">
-            <div class="bundle-card" *ngFor="let bundle of product.bundles">
-                <h3>{{ bundle.name }}</h3>
-                <p>₹{{ bundle.price }}</p>
-                <button class="btn" routerLink="/auth">Add to Cart</button>
-            </div>
+        <div class="pd-description">
+          <h3>Product Details</h3>
+          <p *ngIf="product?.description; else noDesc" [innerHTML]="formatDescription(product.description)"></p>
+          <ng-template #noDesc><p>No detailed description available.</p></ng-template>
         </div>
-    </div>
 
-    <!-- Testimonials -->
-    <div class="product-section testimonials" *ngIf="product.testimonials?.length">
-        <h2>What Our Customers Say</h2>
-        <div class="testimonial-grid">
-            <div class="testimonial-card" *ngFor="let t of product.testimonials">
-                <p>"{{ t.review }}"</p>
-                <strong>– {{ t.author }}</strong>
-            </div>
+        <!-- optional: category / share -->
+        <div class="pd-footer">
+          <div class="category">Category: <strong>{{ p?.category }}</strong></div>
+          <div class="share">
+            <button (click)="share()">Share</button>
+          </div>
         </div>
+      </div>
     </div>
-
+  </div>
 </section>
 
-<!-- Why choose us section -->
-<section class="why-choose-us">
-    <h2>Why Choose Us</h2>
-    <div class="features">
-        <div class="feature">
-            <img src="/assets/Natural_Products.png" alt="Natural Products">
-            <h3>100% Natural</h3>
-            <p>Made with safe, herbal, and natural ingredients for effective results.</p>
-        </div>
+<!-- loading skeleton -->
+<ng-template #loadingTpl>
+  <div class="loading">Loading product…</div>
+</ng-template>
 
-        <div class="feature">
-            <img src="/assets/Expert_Approved.png" alt="Expert Approved">
-            <h3>Expert Approved</h3>
-            <p>Backed by nutritionists and fitness experts to support your journey.</p>
-        </div>
-
-        <div class="feature">
-            <img src="/assets/Happy_Customers.png" alt="Happy Customers">
-            <h3>10,000+ Customers</h3>
-            <p>Trusted by thousands of people who transformed their lives.</p>
-        </div>
-
-        <div class="feature">
-            <img src="/assets/Shipping_Service.png" alt="Shipping Service">
-            <h3>Shipping Service</h3>
-            <p>Fast & Reliable Delivery. Get your products delivered safely and on time, anywhere in India.</p>
-        </div>
-    </div>
-</section>
+<!-- error -->
+<div class="error" *ngIf="error">
+  <p>Failed to load product. Try again later.</p>
+  <button (click)="loadProduct()" class="btn">Retry</button>
+</div>

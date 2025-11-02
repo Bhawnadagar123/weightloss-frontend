@@ -1,72 +1,93 @@
-<!-- Featured Products -->
-<section class="featured-products">
-  <h2>Featured Products</h2>
-  <div class="product-grid">
+<!-- product-list.component.html -->
+<section class="product-list-page">
+  <div class="topbar">
+    <div class="title">Products</div>
 
-    <!-- Product 1 -->
-     <a href="/product-detail" style="text-decoration: none; ">
-    <div class="product-card">
-      <img src="/assets/Slim_belly_fit1.jpg" alt="Product 1">
-      <h3>Slim Belly Fit, Lose Weight, Gain Balance</h3>
-      <p class="price">
-        <span>Rs. 1299 </span>
-        <span style="text-decoration: line-through;color: #b4b4b4">Rs. 2499</span>
-      </p>
-    </div>
-    </a>
+    <form class="search-form" (submit)="applySearch($event)">
+      <input
+        type="search"
+        placeholder="Search products..."
+        [value]="searchQuery"
+        (input)="searchQuery = $event.target.value"
+        name="q"
+        aria-label="Search products"
+      />
+      <button type="submit" aria-label="Search">🔍</button>
+    </form>
+  </div>
 
-    <!-- Product 2 -->
-     <a href="/product-detail" style="text-decoration: none; ">
-    <div class="product-card">
-      <img src="/assets/Slim_belly_oil1.jpg" alt="Product 2">
-      <h3>Slim Belly Oil For Reduce Belly Fat, Boost stamina and daily energy</h3>
-      <p class="price">
-        <span>Rs. 999 </span>
-        <span style="text-decoration: line-through;color: #b4b4b4">Rs. 1499</span>
-      </p>
+  <!-- summary -->
+  <div class="list-meta" *ngIf="!loading && products.length">
+    <div>{{ totalElements }} product(s) found</div>
+    <div class="sort-placeholder">
+      <!-- optional: sorting dropdown later -->
     </div>
-    </a>
+  </div>
 
-    <!-- Product 3 -->
-     <a href="/product-detail" style="text-decoration: none; ">
-    <div class="product-card">
-      <img src="/assets/Tulsi_veda1.jpg" alt="Product 3">
-      <h3>Tulsi Veda for Boost Immunity, Improve Digestion, Enhance Overall Health</h3>
-      <p class="price">
-        <span>Rs. 1499 </span>
-        <span style="text-decoration: line-through;color: #b4b4b4">Rs. 2999</span>
-      </p>
+  <!-- loading skeleton -->
+  <div class="product-grid" *ngIf="loading">
+    <div class="card skeleton" *ngFor="let n of skeletons"></div>
+  </div>
+
+  <!-- empty state -->
+  <div class="empty" *ngIf="!loading && products.length === 0">
+    <p>No products found.</p>
+    <a routerLink="/contact" class="btn">Need help?</a>
+  </div>
+
+  <!-- product grid -->
+  <div class="product-grid" *ngIf="!loading && products.length">
+    <div class="product-card" *ngFor="let p of products">
+      <a [routerLink]="['/products', p.id]" class="product-link">
+        <img
+          class="product-img"
+          [src]="imgUrl(p.images[0])"
+          [alt]="p.name"
+          (error)="onImgError($event)"
+        />
+      </a>
+
+      <div class="product-body">
+        <h3 class="product-title" [title]="p.name">{{ p.name }}</h3>
+        <p class="product-sub">{{ p.subDescription || p.description }}</p>
+
+        <div class="price-row">
+          <div class="price">₹{{ p.price | number:'1.0-0' }}</div>
+          <div class="mrp" *ngIf="p.mrp">₹{{ p.mrp | number:'1.0-0' }}</div>
+        </div>
+
+        <div class="product-actions">
+          <button class="btn primary" (click)="addToCart(p.id)" [disabled]="adding[p.id]">
+            {{ adding[p.id] ? 'Adding...' : 'Add to cart' }}
+          </button>
+          <!-- <a class="btn link" [routerLink]="['/products', p.id]">Details</a> -->
+        </div>
+      </div>
     </div>
-    </a>
+  </div>
+
+  <!-- pagination -->
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button (click)="gotoPage(page - 1)" [disabled]="page === 0">‹ Prev</button>
+    <span>Page {{ page + 1 }} / {{ totalPages }}</span>
+    <button (click)="gotoPage(page + 1)" [disabled]="page + 1 >= totalPages">Next ›</button>
+  </div>
+
+  <!-- error message -->
+  <div class="error" *ngIf="error">
+    <p>Error loading products. Try again later.</p>
+    <button class="btn" (click)="loadProducts()">Retry</button>
   </div>
 </section>
 
-<!-- Why choose us section -->
+<!-- Why choose us -->
 <section class="why-choose-us">
-    <h2>Why Choose Us</h2>
-    <div class="features">
-        <div class="feature">
-            <img src="/assets/Natural_Products.png" alt="Natural Products">
-            <h3>100% Natural</h3>
-            <p>Made with safe, herbal, and natural ingredients for effective results.</p>
-        </div>
-
-        <div class="feature">
-            <img src="/assets/Expert_Approved.png" alt="Expert Approved">
-            <h3>Expert Approved</h3>
-            <p>Backed by nutritionists and fitness experts to support your journey.</p>
-        </div>
-
-        <div class="feature">
-            <img src="/assets/Happy_Customers.png" alt="Happy Customers">
-            <h3>10,000+ Customers</h3>
-            <p>Trusted by thousands of people who transformed their lives.</p>
-        </div>
-
-        <div class="feature">
-            <img src="/assets/Shipping_Service.png" alt="Shipping Service">
-            <h3>Shipping Service</h3>
-            <p>Fast & Reliable Delivery. Get your products delivered safely and on time, anywhere in India.</p>
-        </div>
+  <h2>Why Choose Us</h2>
+  <div class="features">
+    <div class="feature" *ngFor="let f of features">
+      <img [src]="f.icon" alt="{{f.title}}">
+      <h3>{{ f.title }}</h3>
+      <p>{{ f.text }}</p>
     </div>
+  </div>
 </section>

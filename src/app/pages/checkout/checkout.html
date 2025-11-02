@@ -1,0 +1,135 @@
+<section class="checkout-page" *ngIf="!loading; else loadingTpl">
+  <h2 class="page-title">Checkout</h2>
+
+  <div class="checkout-grid">
+    <!-- Checkout form -->
+    <div class="form-wrap">
+      <form (submit)="onPlaceOrder($event)" novalidate>
+        <fieldset class="group">
+          <legend>Contact & full name</legend>
+
+          <label class="two-col">
+            <span>First name</span>
+            <input name="first" type="text" [(ngModel)]="firstName" required />
+          </label>
+
+          <label class="two-col">
+            <span>Last name</span>
+            <input name="last" type="text" [(ngModel)]="lastName" required />
+          </label>
+
+          <label class="full">
+            <span>Mobile number</span>
+            <input
+              name="mobile"
+              type="tel"
+              inputmode="numeric"
+              maxlength="10"
+              [(ngModel)]="mobile"
+              required
+              placeholder="10-digit mobile"
+            />
+            <small class="hint" *ngIf="mobile && !validMobile()">Enter valid 10 digit mobile.</small>
+          </label>
+        </fieldset>
+
+        <fieldset class="group">
+          <legend>Address</legend>
+
+          <label class="full">
+            <span>Pincode</span>
+            <input name="pincode" type="text" maxlength="6" inputmode="numeric" [(ngModel)]="pincode" required />
+            <small class="hint" *ngIf="pincode && !validPincode()">Pincode must be 6 digits.</small>
+          </label>
+
+          <label class="full">
+            <span>Flat / House / Building / Company / Apartment</span>
+            <input name="flat" type="text" [(ngModel)]="flat" required />
+          </label>
+
+          <label class="full">
+            <span>Area / Street / Sector / Village</span>
+            <input name="area" type="text" [(ngModel)]="area" required />
+          </label>
+
+          <label class="full">
+            <span>Landmark (e.g. near Apollo Hospital)</span>
+            <input name="landmark" type="text" [(ngModel)]="landmark" />
+          </label>
+
+          <label class="two-col">
+            <span>Town / City</span>
+            <input name="city" type="text" [(ngModel)]="city" required />
+          </label>
+
+          <label class="two-col">
+            <span>State</span>
+            <input name="state" type="text" [(ngModel)]="state" required />
+          </label>
+
+          <div class="addr-actions">
+            <button type="button" class="btn outline" (click)="useThisAddress()" [disabled]="!canComposeAddress()">Use this address</button>
+            <button type="button" class="btn" (click)="clearAddressFields()">Clear fields</button>
+          </div>
+
+          <label class="full">
+            <span>Shipping address (final)</span>
+            <textarea name="addr" [(ngModel)]="shippingAddress" rows="4" required></textarea>
+            <small class="hint">You can edit the composed address before placing order.</small>
+          </label>
+        </fieldset>
+
+        <fieldset class="group">
+          <legend>Payment</legend>
+          <label class="full">
+            <span>Payment method</span>
+            <select [(ngModel)]="paymentMethod" name="pm" required>
+              <option value="COD">Cash on Delivery (COD)</option>
+              <option value="ONLINE">Online Payment</option>
+            </select>
+          </label>
+
+          <div class="note" *ngIf="paymentMethod === 'ONLINE'">
+            Online payment flow not implemented — this demo will still call the place order API with "ONLINE".
+          </div>
+        </fieldset>
+
+        <div class="actions">
+          <button type="submit" [disabled]="placing || !cart?.items?.length">
+            {{ placing ? 'Placing order...' : 'Place Order' }}
+          </button>
+          <button type="button" class="link" (click)="goBack()">Back to Cart</button>
+        </div>
+
+        <div class="error" *ngIf="error">{{ error }}</div>
+      </form>
+    </div>
+
+    <!-- Order summary -->
+    <aside class="summary" aria-labelledby="summary-title">
+      <h3 id="summary-title">Order Summary</h3>
+      <div *ngIf="cart?.items?.length; else noItems">
+        <div class="line" *ngFor="let it of cart.items">
+          <div class="left">
+            <div class="name">{{ it.productName }}</div>
+            <div class="meta">{{ it.quantity }} × ₹{{ it.unitPrice | number:'1.0-0' }}</div>
+          </div>
+          <div class="right">₹{{ it.totalPrice | number:'1.0-0' }}</div>
+        </div>
+
+        <div class="subtotal">
+          <span>Subtotal</span>
+          <strong>₹{{ cart.grandTotal | number:'1.0-0' }}</strong>
+        </div>
+      </div>
+
+      <ng-template #noItems>
+        <p>Your cart is empty. <a routerLink="/product-list">Shop</a></p>
+      </ng-template>
+    </aside>
+  </div>
+</section>
+
+<ng-template #loadingTpl>
+  <div class="loading">Loading…</div>
+</ng-template>

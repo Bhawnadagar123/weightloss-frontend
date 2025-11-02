@@ -5,11 +5,144 @@
   position: sticky;
   top: 0;
   z-index: 1100;
-  background: linear-gradient(180deg, #e78686, #d06d6d);
+  background: linear-gradient(180deg, #ffffff, #ffffff);
   border-bottom: 1px solid #e6e6e6;
   padding: 8px 12px;
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
 }
+/* ---- User avatar & dropdown ---- */
+.user-wrap { position: relative; display: inline-block; }
+.user-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: none;
+  background: #f2f6f2;
+  cursor: pointer;
+  padding: 0;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+.user-btn:focus { outline: 2px solid rgba(46,125,50,0.25); }
+
+.user-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 999px;
+}
+
+/* fallback initials circle */
+.user-initials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  font-weight: 700;
+  color: #fff;
+  background: #2e7d32;
+  border-radius: 999px;
+  font-size: 14px;
+}
+
+/* dropdown */
+.user-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  background: #fff;
+  border-radius: 10px;
+  min-width: 180px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  padding: 8px;
+  z-index: 1300;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* dropdown items (big tap targets) */
+.ud-item {
+  text-align: left;
+  border: none;
+  background: transparent;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #222;
+}
+.ud-item:hover { background: #f6f6f6; }
+.ud-item[disabled], .ud-item[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* mobile adjustments */
+@media (max-width: 640px) {
+  .user-dropdown { min-width: 160px; right: 4px; }
+  .user-btn { width: 44px; height: 44px; }
+}
+
+
+/* 🌿 Announcement Bar */
+.announcement-bar {
+  width: 100%;
+  background: linear-gradient(90deg, #ff8a65, #e78686);
+  color: #fff;
+  font-size: 0.95rem;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 1100; /* slightly higher than navbar */
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.announcement-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  flex-wrap: wrap;
+}
+
+.announcement-text strong {
+  color: #fff;
+  font-weight: 700;
+}
+
+.announcement-link {
+  color: #fff;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.announcement-link:hover {
+  text-decoration: none;
+  color: #f0f0f0;
+}
+
+.announcement-close {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+@media (max-width: 600px) {
+  .announcement-wrapper {
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+  }
+}
+
 
 /* INNER FLEX LAYOUT */
 .navbar-inner {
@@ -24,6 +157,13 @@
 .logo {
   flex-shrink: 0;
   
+}
+
+.logo-img {
+  height: 42px;
+  width: auto;
+  border-radius: 8px; /* optional if your logo has corners */
+  flex-shrink: 0;
 }
 .logo h2 {
   margin: 0;
@@ -249,7 +389,7 @@
   }
 
   .navbar {
-    background: linear-gradient(180deg, #e78686, #d06d6d);
+    background: linear-gradient(180deg, #ffffff, #ffffff);
   }
 
   .suggestions {
@@ -257,3 +397,211 @@
     right: auto;
   }
 }
+
+/* ---------------- Mobile bottom navigation ---------------- */
+.mobile-bottom-nav {
+  display: none; /* shown only on small screens via media query */
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: env(safe-area-inset-bottom, 8px) 8px 8px;
+  background: #fff;
+  border-top: 1px solid #eee;
+  box-shadow: 0 -6px 18px rgba(0,0,0,0.06);
+  z-index: 1400; /* above header content */
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 6px;
+  justify-content: space-around;
+  align-items: center;
+}
+
+/* each button */
+.mb-btn {
+  background: transparent;
+  border: none;
+  padding: 8px 6px;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  font: 12px/1 system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+  color: #1b1b1b;
+  cursor: pointer;
+  position: relative;
+  border-radius: 8px;
+}
+
+/* visual active state when tapped */
+.mb-btn:active,
+.mb-btn.active {
+  background: rgba(46,125,50,0.08);
+}
+
+/* icon */
+.mb-icon { font-size: 18px; display:block; }
+
+/* small initials avatar */
+.mb-initials {
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #e6f3ea;
+  color: #1b5e20;
+  font-weight:700;
+}
+
+/* image avatar */
+.user-avatar img { width:30px; height:30px; border-radius:999px; object-fit:cover; }
+
+/* label below icon */
+.mb-label { font-size: 11px; color: #333; }
+
+/* badge for cart count */
+.mb-badge {
+  position: absolute;
+  top: 6px;
+  right: 18%;
+  transform: translateY(-2px);
+  background: #e53935;
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight:700;
+}
+
+/* small user dropdown inside the button (simple stacked list) */
+.mobile-user-dropdown {
+  position: absolute;
+  bottom: 56px;
+  right: 8px;
+  min-width: 160px;
+  background: #fff;
+  border: 1px solid #eee;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  z-index: 1500;
+}
+.mobile-user-dropdown .ud-item {
+  padding: 10px 12px;
+  text-align: left;
+  background: transparent;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+}
+.mobile-user-dropdown .ud-item:hover { background: #f6f6f6; }
+
+/* ----- hide top right heavy actions on small screens ----- */
+@media (max-width: 767px) {
+
+  /* keep header layout compact */
+  .navbar-inner {
+    padding: 6px 12px;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* show hamburger, logo as usual */
+  .hamburger { display: inline-block; }
+
+  /* compact nav-links (when opened) */
+  .nav-links {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 56px; /* below header */
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    background: #fff;
+    padding: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    border-radius: 8px;
+    z-index: 1200;
+  }
+  .nav-links.open { display: flex; }
+
+  /* IMPORTANT: show search on top but hide heavy action buttons (cart / user) */
+  .nav-actions {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+  }
+
+  /* hide cart & user (they exist in bottom nav) but keep search visible */
+  .nav-actions .cart,
+  .nav-actions .user-wrap,
+  .nav-actions .login-btn {
+    display: none;
+  }
+
+  /* show only search-wrap inside nav-actions */
+  .search-wrap {
+    display: block;
+    position: relative;
+    flex: 1 1 auto;
+    max-width: calc(100vw - 96px); /* allow room for hamburger & small paddings */
+  }
+
+  .search-bar {
+    width: 100%;
+    padding: 10px 44px 10px 12px; /* room for search button to the right */
+    border-radius: 22px;
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    box-sizing: border-box;
+    font-size: 14px;
+  }
+
+  .search-btn {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    padding: 8px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  /* suggestions dropdown should sit above mobile bottom nav and nav-links */
+  .suggestions {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    z-index: 1400;
+    max-height: 260px;
+    overflow-y: auto;
+  }
+
+  /* reduce logo size a little on mobile so search fits */
+  .logo-img {
+    height: 36px;
+  }
+
+  /* prevent unwanted right whitespace by ensuring no overflow */
+  html, body, .navbar {
+    overflow-x: hidden;
+  }
+}
+
+/* keep desktop unchanged */
+@media (min-width: 768px) {
+  .mobile-bottom-nav { display: none; }
+}
+

@@ -1,9 +1,23 @@
 <header class="navbar">
+
+  <!-- 🌿 Announcement / Offer Bar -->
+<div class="announcement-bar" *ngIf="showAnnouncement">
+  <div class="announcement-wrapper">
+    <span class="announcement-text">
+      🎉 Festive Offer: <strong>Grab upto 65% off </strong> on all herbal products!
+    </span>
+    <a routerLink="/product-list" class="announcement-link">Shop Now →</a>
+    
+  </div>
+</div>
+
+
   <div class="navbar-inner">
     <!-- Left: Logo -->
     <div class="logo">
       <a routerLink="/" style="text-decoration: none;" (click)="closeMenu()">
-        <h2>Ayurs & Herbals</h2>
+        <!-- <h2>Ayurs & Herbals</h2> -->
+         <img src="assets/logo.jpg" alt="Ayurs & Herbals Logo" class="logo-img" />
       </a>
     </div>
 
@@ -55,7 +69,75 @@
         <span class="cart-count" *ngIf="cartCount > 0">{{ cartCount }}</span>
       </a>
 
-      <button class="login-btn" routerLink="/auth" (click)="closeMenu()">Login / Signup</button>
+      <!-- User avatar + dropdown -->
+<div class="user-wrap" [class.open]="userMenuOpen">
+  <!-- Avatar / button -->
+  <button class="user-btn" (click)="toggleUserMenu($event)" [attr.aria-expanded]="userMenuOpen" aria-haspopup="true" aria-label="User menu">
+    <img *ngIf="userAvatarUrl; else initialsTpl" [src]="userAvatarUrl" alt="User" class="user-avatar" />
+    <ng-template #initialsTpl>
+      <span class="user-initials">{{ userInitials }}</span>
+    </ng-template>
+  </button>
+
+  <!-- Dropdown -->
+  <ul class="user-dropdown" *ngIf="userMenuOpen" role="menu" (click)="$event.stopPropagation()">
+    <li role="none">
+      <button role="menuitem"role="menuitem" class="ud-item" (click)="onLogin()" [disabled]="isLoggedIn" [attr.aria-disabled]="isLoggedIn">
+        🔐 Login
+      </button>
+    </li>
+
+    <li role="none">
+      <button role="menuitem" class="ud-item" (click)="onLogout()" [disabled]="!isLoggedIn" [attr.aria-disabled]="!isLoggedIn">
+
+        ⎋ Log Out 
+      </button>
+    </li>
+
+    <li role="none">
+      <button role="menuitem" class="ud-item" (click)="onRegister()" [disabled]="isLoggedIn" [attr.aria-disabled]="isLoggedIn">
+        ✍️ Create Account
+      </button>
+    </li>
+  </ul>
+</div>
     </div>
   </div>
 </header>
+
+<!-- ===== Mobile Bottom Nav (insert this AFTER the header) ===== -->
+<nav class="mobile-bottom-nav" role="navigation" aria-label="Mobile bottom navigation">
+  <button class="mb-btn" (click)="goHome()" aria-label="Home">
+    <span class="mb-icon">🏠</span>
+    <span class="mb-label">Home</span>
+  </button>
+
+  <button class="mb-btn" (click)="goCart()" aria-label="Cart">
+    <span class="mb-icon">🛒</span>
+    <span class="mb-label">Cart</span>
+    <span class="mb-badge" *ngIf="cartCount > 0">{{ cartCount }}</span>
+  </button>
+
+  <button class="mb-btn" (click)="toggleMenu()" aria-label="Menu" [class.active]="menuOpen">
+    <span class="mb-icon">☰</span>
+    <span class="mb-label">Menu</span>
+  </button>
+
+  <button class="mb-btn user-wrap" (click)="toggleUserMenu($event)" aria-haspopup="true" aria-expanded="{{userMenuOpen}}">
+    <span class="mb-icon user-avatar" *ngIf="userAvatarUrl; else initialsTpl">
+      <img [src]="userAvatarUrl" alt="User avatar" />
+    </span>
+    <ng-template #initialsTpl>
+      <span class="mb-initials">{{ userInitials }}</span>
+    </ng-template>
+    <span class="mb-label">Account</span>
+
+    <!-- small dropdown (optional, reuse your existing user menu markup if you have one) -->
+    <div class="mobile-user-dropdown" *ngIf="userMenuOpen" >
+     
+      <button  class="ud-item" (click)="onLogin()" >Login</button>
+      <button class="ud-item" (click)="onLogout()" *ngIf="isLoggedIn" >Logout</button>
+      <button class="ud-item" (click)="onRegister()" >Create account</button>
+    </div>
+  </button>
+</nav>

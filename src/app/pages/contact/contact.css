@@ -1,8 +1,8 @@
 .contact-hero {
   background: url('/assets/Banner.jpg') center/cover no-repeat;
   text-align: center;
-  color: white;
-  padding: 80px 20px;
+  color: #3617df;
+  padding: 65px 20px;
 }
 
 .contact-hero h1 {

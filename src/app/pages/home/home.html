@@ -1,26 +1,117 @@
 <!-- Hero Section (mobile-first) -->
 <section class="hero">
   <div class="hero-slider">
-    <div class="slide" *ngFor="let slide of slides; let i = index" [class.active]="i === currentIndex">
-      <img [src]="slide.image" alt="Offer Banner" />
-      <div class="slide-content">
-        <h1>{{ slide.title }}</h1>
-        <p>{{ slide.subtitle }}</p>
-        <a routerLink="/product-list" class="cta-btn">Shop Now</a>
+
+    <!-- MOBILE CARD LAYOUT (shown on narrow screens) -->
+    <div class="mobile-cards">
+      <div
+        class="mobile-card"
+        *ngFor="let slide of slides; let i = index"
+        [class.active]="i === currentIndex"
+        [style.background]="slide.mobile.bgColor || '#2e7d32'"
+        role="group"
+        aria-roledescription="slide"
+        [attr.aria-label]="slide.mobile.caption + ' - ' + slide.mobile.sub"
+      >
+        <div class="mobile-card-inner">
+          <div class="mobile-text">
+            <div class="badge">Offer</div>
+            <h2 class="mobile-title">{{ slide.mobile.caption }}</h2>
+            <p class="mobile-sub">{{ slide.mobile.sub }}</p>
+            <a routerLink="/product-list" class="cta-btn">Shop Now</a>
+          </div>
+
+          <div class="mobile-visual">
+            <img [src]="slide.mobile.productImage" [alt]="slide.mobile.caption" loading="lazy" />
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Arrows -->
+    <!-- DESKTOP / TABLET: full-bleed image slider -->
+    <div class="desktop-slides">
+      <div class="slide" *ngFor="let slide of slides; let i = index" [class.active]="i === currentIndex" role="group" aria-roledescription="slide" [attr.aria-label]="slide.title || slide.mobile.caption">
+        <img [src]="slide.image" alt="{{ slide.title || slide.mobile.caption }}" loading="lazy" />
+        <div class="slide-content">
+          <h1>{{ slide.title || slide.mobile.caption }}</h1>
+          <p>{{ slide.subtitle || slide.mobile.sub }}</p>
+          <a routerLink="/product-list" class="cta-btn">Shop Now</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carousel controls (shared) -->
     <button class="arrow left" (click)="prevSlide()" aria-label="Previous">‹</button>
     <button class="arrow right" (click)="nextSlide()" aria-label="Next">›</button>
 
-    <!-- Dots -->
-    <div class="dots">
-      <span *ngFor="let slide of slides; let i = index" [class.active]="i === currentIndex" (click)="goToSlide(i)"></span>
+    <div class="dots" aria-hidden="false">
+      <button *ngFor="let s of slides; let i = index" (click)="goToSlide(i)" [class.active]="i===currentIndex" [attr.aria-pressed]="i===currentIndex" aria-label="Go to slide {{i+1}}"></button>
     </div>
   </div>
 </section>
 
+<!-- Featured Products -->
+<!-- Featured products slider (mobile-first) -->
+<section class="fp-section" aria-label="Featured products carousel">
+  <div class="fp-header">
+    <h2>Featured Products</h2>
+    <a routerLink="/product-list" class="fp-all">View All →</a>
+  </div>
+
+  <div class="fp-viewport"
+       (touchstart)="fpTouchStart($event)"
+       (touchmove)="fpTouchMove($event)"
+       (touchend)="fpTouchEnd($event)"
+       (mouseenter)="stopFpAuto()"
+       (mouseleave)="startFpAuto()"
+       tabindex="0"
+       (keydown.arrowLeft)="prevFp()"
+       (keydown.arrowRight)="nextFp()">
+
+    <div class="fp-track" [style.transform]="'translateX(' + (-fpIndex * 100) + '%)'" 
+         [class.dragging]="fpDragging">
+      <div class="fp-slide" *ngFor="let p of featuredProducts; let i = index" [class.center]="i === fpIndex">
+        <!-- <a [routerLink]="['/products', p.id]" class="fp-card">
+  <div class="fp-img-wrap">
+    <img [src]="imgUrl((p.images && p.images.length) ? p.images[0] : '/assets/placeholder.png')" [alt]="p.name" (error)="onImgError($event)"/>
+  </div>
+          <div class="fp-body">
+            <h3 class="fp-name">{{ p.name }}</h3>
+            <div class="fp-price">
+              ₹{{ p.price | number:'1.0-0' }}
+              <span *ngIf="p.mrp" class="fp-mrp">₹{{ p.mrp | number:'1.0-0' }}</span>
+            </div>
+          </div>
+        </a> -->
+        <a [routerLink]="['/products', p.id]" class="fp-card vertical">
+  <div class="fp-img-wrap">
+    <img
+      [src]="imgUrl((p.images && p.images.length) ? p.images[0] : '/assets/placeholder.png')"
+      [alt]="p.name"
+      (error)="onImgError($event)"
+    />
+  </div>
+
+  <div class="fp-body">
+    <h3 class="fp-name">{{ p.name }}</h3>
+    <div class="fp-price">
+      ₹{{ p.price | number:'1.0-0' }}
+      <span *ngIf="p.mrp" class="fp-mrp">₹{{ p.mrp | number:'1.0-0' }}</span>
+    </div>
+  </div>
+</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="fp-controls">
+    <!-- <button class="fp-arrow" (click)="prevFp()" aria-label="Previous product">‹</button> -->
+    <div class="fp-dots" role="tablist">
+      <button *ngFor="let p of featuredProducts; let i = index" (click)="goToFp(i)" [class.active]="i === fpIndex" [attr.aria-pressed]="i===fpIndex" [attr.aria-label]="'Go to product ' + (i+1)"></button>
+    </div>
+    <!-- <button class="fp-arrow" (click)="nextFp()" aria-label="Next product">›</button> -->
+  </div>
+</section>
 <!-- Why choose us -->
 <section class="why-choose-us">
   <h2>Why Choose Us</h2>
@@ -33,34 +124,7 @@
   </div>
 </section>
 
-<!-- Featured Products -->
-<section class="featured-products">
-  <h2>Featured Products</h2>
 
-  <div class="product-grid">
-    <div *ngFor="let p of featuredProducts" class="product-card">
-      <a [routerLink]="['/products', p.id]" class="product-link">
-        <img [src]="imgUrl(p.images[0])" [alt]="p.name" class="product-img" />
-      </a>
-
-      <div class="product-body">
-        <h3 class="product-title">{{ p.name }}</h3>
-        <p class="product-sub">{{ p.subDescription || p.description }}</p>
-        <p class="price">
-          <span>₹{{ p.price | number:'1.0-0' }}</span>
-          <span *ngIf="p.mrp" class="mrp">₹{{ p.mrp | number:'1.0-0' }}</span>
-        </p>
-
-        <div class="product-actions">
-          <button (click)="addToCart(p.id)" class="btn btn-primary">Add to Cart</button>
-          <a [routerLink]="['/products', p.id]" class="btn btn-link">Details</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <a routerLink="/product-list" class="view-all">View All Products →</a>
-</section>
 
 <!-- Blogs Preview -->
 <section class="blogs">
