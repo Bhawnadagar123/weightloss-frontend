@@ -1,0 +1,93 @@
+<!-- product-list.component.html -->
+<section class="product-list-page">
+  <div class="topbar">
+    <div class="title">Products</div>
+
+    <form class="search-form" (submit)="applySearch($event)">
+      <input
+        type="search"
+        placeholder="Search products..."
+        [value]="searchQuery"
+        (input)="searchQuery = $event.target.value"
+        name="q"
+        aria-label="Search products"
+      />
+      <button type="submit" aria-label="Search">🔍</button>
+    </form>
+  </div>
+
+  <!-- summary -->
+  <div class="list-meta" *ngIf="!loading && products.length">
+    <div>{{ totalElements }} product(s) found</div>
+    <div class="sort-placeholder">
+      <!-- optional: sorting dropdown later -->
+    </div>
+  </div>
+
+  <!-- loading skeleton -->
+  <div class="product-grid" *ngIf="loading">
+    <div class="card skeleton" *ngFor="let n of skeletons"></div>
+  </div>
+
+  <!-- empty state -->
+  <div class="empty" *ngIf="!loading && products.length === 0">
+    <p>No products found.</p>
+    <a routerLink="/contact" class="btn">Need help?</a>
+  </div>
+
+  <!-- product grid -->
+  <div class="product-grid" *ngIf="!loading && products.length">
+    <div class="product-card" *ngFor="let p of products">
+      <a [routerLink]="['/products', p.id]" class="product-link">
+        <img
+          class="product-img"
+          [src]="imgUrl(p.images[0])"
+          [alt]="p.name"
+          (error)="onImgError($event)"
+        />
+      </a>
+
+      <div class="product-body">
+        <h3 class="product-title" [title]="p.name">{{ p.name }}</h3>
+        <p class="product-sub">{{ p.subDescription || p.description }}</p>
+
+        <div class="price-row">
+          <div class="price">₹{{ p.price | number:'1.0-0' }}</div>
+          <div class="mrp" *ngIf="p.mrp">₹{{ p.mrp | number:'1.0-0' }}</div>
+        </div>
+
+        <div class="product-actions">
+          <button class="btn primary" (click)="addToCart(p.id)" [disabled]="adding[p.id]">
+            {{ adding[p.id] ? 'Adding...' : 'Add to cart' }}
+          </button>
+          <!-- <a class="btn link" [routerLink]="['/products', p.id]">Details</a> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- pagination -->
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button (click)="gotoPage(page - 1)" [disabled]="page === 0">‹ Prev</button>
+    <span>Page {{ page + 1 }} / {{ totalPages }}</span>
+    <button (click)="gotoPage(page + 1)" [disabled]="page + 1 >= totalPages">Next ›</button>
+  </div>
+
+  <!-- error message -->
+  <div class="error" *ngIf="error">
+    <p>Error loading products. Try again later.</p>
+    <button class="btn" (click)="loadProducts()">Retry</button>
+  </div>
+</section>
+
+<!-- Why choose us -->
+<section class="why-choose-us">
+  <h2>Why Choose Us</h2>
+  <div class="features">
+    <div class="feature" *ngFor="let f of features">
+      <img [src]="f.icon" alt="{{f.title}}">
+      <h3>{{ f.title }}</h3>
+      <p>{{ f.text }}</p>
+    </div>
+  </div>
+</section>

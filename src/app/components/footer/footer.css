@@ -1,0 +1,129 @@
+/* footer.css - mobile-first, then desktop grid for >=768px */
+.footer {
+  background: linear-gradient(180deg, #e78686, #d06d6d);
+  color: #fff;
+  padding: 28px 16px 20px;
+  margin-top: 40px;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+}
+
+/* Grid container (mobile: single column stack) */
+.footer-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+  align-items: start;
+}
+
+/* Brand section */
+.footer-logo h2 {
+  font-size: 22px;
+  color: #2e7d32;
+  margin: 0 0 8px 0;
+}
+.footer-logo .tagline {
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: #f9f9f9;
+}
+
+/* Social icons inline under brand */
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 6px;
+  font-size: 20px;
+}
+
+/* Links and contact blocks look consistent on mobile */
+.footer-links h3,
+.footer-contact h3 {
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.footer-links a,
+.footer-contact p,
+.footer-contact a {
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+/* Newsletter block under content on mobile */
+.footer-newsletter {
+  margin-top: 8px;
+  text-align: center;
+}
+.newsletter-form {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+.newsletter-form input {
+  padding: 8px 12px;
+  border-radius: 20px;
+  border: none;
+  width: 200px;
+  outline: none;
+  font-size: 14px;
+}
+.newsletter-form button {
+  background: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* Bottom note */
+.footer-bottom {
+  text-align: center;
+  border-top: 1px solid rgba(255,255,255,0.18);
+  padding-top: 12px;
+  margin-top: 18px;
+  font-size: 13px;
+  color: #f2f2f2;
+}
+
+/* ---------- Desktop layout: 3 columns ---------- */
+@media (min-width: 768px) {
+  .footer-content {
+    grid-template-columns: 1fr 1fr 1fr; /* Brand | Links | Contact */
+    gap: 28px;
+    text-align: left;
+  }
+
+  .footer-logo {
+    /* left column */
+  }
+
+  .footer-links {
+    /* middle column */
+  }
+
+  .footer-contact {
+    /* right column */
+  }
+
+  /* Make newsletter span full width below the three columns */
+  .footer-newsletter {
+    grid-column: 1 / -1; /* full width */
+    margin-top: 12px;
+    text-align: center; /* keep centered for newsletter */
+  }
+
+  /* Slightly wider newsletter input on desktop */
+  .newsletter-form input {
+    width: 320px;
+  }
+}

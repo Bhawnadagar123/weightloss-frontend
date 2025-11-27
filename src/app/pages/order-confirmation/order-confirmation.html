@@ -1,0 +1,50 @@
+<!-- src/app/pages/order-confirmation/order-confirmation.alt.component.html -->
+<section class="order-confirm-alt">
+  <div class="hero">
+    <div class="badge">Order Complete</div>
+    <h1 *ngIf="order">Thank you — your order #{{ order.id }} is confirmed</h1>
+    <p *ngIf="order" class="sub">Total ₹{{ order.totalAmount | number:'1.0-0' }} · Payment: {{ order.paymentMethod }}</p>
+  </div>
+
+  <div class="card" *ngIf="!loading && order; else loadingTpl">
+    <div class="card-row">
+      <div>
+        <h4>Shipping address</h4>
+        <pre>{{ order.shippingAddress }}</pre>
+      </div>
+      <div class="meta">
+        <div><strong>Status</strong><div class="caps">{{ order.status }}</div></div>
+        <div style="margin-top:8px"><strong>Placed</strong><div>{{ order.createdAt | date:'medium' }}</div></div>
+      </div>
+    </div>
+
+    <hr />
+
+    <h4>Items</h4>
+    <ul class="items">
+      <li *ngFor="let it of order.items">
+        <div class="left">
+          <div class="name">{{ it.productName }}</div>
+          <div class="qty">×{{ it.quantity }}</div>
+        </div>
+        <div class="right">₹{{ it.totalPrice | number:'1.0-0' }}</div>
+      </li>
+    </ul>
+
+    <div class="summary">
+      <div class="label">Total paid</div>
+      <div class="amount">₹{{ order.totalAmount | number:'1.0-0' }}</div>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" (click)="goHome()">Continue Shopping</button>
+      <button class="btn outline" (click)="goOrders()">View Orders</button>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <ng-template #loadingTpl>
+    <div class="loading">Loading order…</div>
+  </ng-template>
+</section>

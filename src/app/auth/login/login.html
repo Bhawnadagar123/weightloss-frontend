@@ -1,0 +1,25 @@
+<section class="auth-page">
+  <h2>Login</h2>
+
+  <form (submit)="onSubmit($event)" class="auth-form" #f="ngForm">
+    <label>
+      Email
+      <input name="email" type="email" [(ngModel)]="email" required (input)="clearMessages()" />
+    </label>
+
+    <label>
+      Password
+      <input name="password" type="password" [(ngModel)]="password" required minlength="6" (input)="clearMessages()" />
+    </label>
+
+    <div class="actions">
+      <button type="submit" [disabled]="loading || !email || !password">{{ loading ? 'Signing in...' : 'Login' }}</button>
+    </div>
+
+    <div class="links">
+      <a routerLink="/register">Don't have an account? Register</a>
+    </div>
+
+    <div class="error" *ngIf="error">{{ error }}</div>
+  </form>
+</section>

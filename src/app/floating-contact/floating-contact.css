@@ -1,0 +1,123 @@
+/* Base Floating Buttons (improved) */
+.floating-buttons {
+  position: fixed;
+  /* default offset (desktop) */
+  bottom: 25px;
+  right: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 1100; /* higher than most navbars, but avoid extremely large numbers */
+  pointer-events: auto;
+  transition: bottom 180ms ease, right 180ms ease, left 180ms ease;
+}
+
+/* left / right helpers */
+.floating-buttons.left-side { right: auto; left: 25px; }
+.floating-buttons.right-side { right: 25px; left: auto; }
+
+/* button style */
+.floating-buttons a {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  background: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 22px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  transition: transform 0.18s ease, background 0.18s ease;
+  border: 2px solid transparent;
+  overflow: visible;
+}
+
+/* explicit colors */
+.phone-btn { color: #007bff; border-color: rgba(0,123,255,0.12); }
+.whatsapp-btn { color: #25d366; border-color: rgba(37,211,102,0.12); }
+
+/* hover & active */
+.floating-buttons a:hover { transform: translateY(-3px) scale(1.04); background: #fafafa; }
+
+/* tooltip styling */
+.tooltip {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  background: rgba(0,0,0,0.85);
+  color: #fff;
+  font-size: 13px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s, transform 0.15s;
+  pointer-events: none;
+  transform-origin: left center;
+}
+
+/* tooltip positioning depending on side */
+.floating-buttons.right-side .tooltip {
+  right: 70px;   /* appears left of button */
+  left: auto;
+}
+.floating-buttons.left-side .tooltip {
+  left: 70px;    /* appears right of button */
+  right: auto;
+}
+
+/* show tooltip on hover or focus */
+.floating-buttons a:hover .tooltip,
+.floating-buttons a:focus .tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ---------- Mobile adjustments (avoids bottom-nav overlap) ---------- */
+@media (max-width: 760px) {
+  /* assume mobile bottom nav ~56-68px tall; push floating buttons above it */
+  .floating-buttons {
+    /* 72px is safe for many bottom navs; add safe-area-inset-bottom for iPhone */
+    bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    right: 12px;
+    left: auto; /* keep on right by default */
+    gap: 12px;
+    z-index: 1200; /* ensure above mobile bottom nav (if nav has lower z-index) */
+  }
+
+  .floating-buttons.left-side {
+    left: 12px;
+    right: auto;
+  }
+
+  .floating-buttons a {
+    width: 56px;
+    height: 56px;
+    font-size: 24px;
+    box-shadow: 0 8px 26px rgba(0,0,0,0.14);
+  }
+
+  /* Tooltip should not overflow on tiny screens; position above instead */
+  .floating-buttons.right-side .tooltip,
+  .floating-buttons.left-side .tooltip {
+    right: auto;
+    left: 50%;
+    transform: translate(-50%, -120%);
+    top: -10px;
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+}
+
+/* if your bottom nav is taller than expected adjust the calc value above to 90px or so */
+
+/* Accessibility: focus outline */
+.floating-buttons a:focus {
+  outline: 3px solid rgba(46,125,50,0.18);
+  outline-offset: 3px;
+}
+
+

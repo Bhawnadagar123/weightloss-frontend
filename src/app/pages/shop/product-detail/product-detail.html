@@ -1,0 +1,103 @@
+<!-- product-detail.component.html -->
+<section class="pd-page" *ngIf="product as p; else loadingTpl">
+  <div class="container">
+    <!-- breadcrumb -->
+    <nav class="breadcrumb">
+      <a routerLink="/">Home</a>
+      <span>›</span>
+      <a routerLink="/product-list">All Products</a>
+      <span>›</span>
+      <span class="current">{{ p?.name }}</span>
+    </nav>
+
+    <div class="pd-grid">
+      <!-- LEFT: Image gallery -->
+      <div class="pd-gallery">
+        <div class="main-image">
+          <button class="arrow left" (click)="prevImage()" aria-label="Previous image">‹</button>
+          <img
+            [src]="imgUrl(currentImage)"
+            [alt]="p?.name"
+            (error)="onImgError($event)"
+            class="main-img"
+          />
+          <button class="arrow right" (click)="nextImage()" aria-label="Next image">›</button>
+        </div>
+
+        <div class="thumbs">
+          <button
+            *ngFor="let img of product?.images; let i = index"
+            class="thumb-btn"
+            [class.active]="i === currentIndex"
+            (click)="goToImage(i)"
+            aria-label="Show image {{ i + 1 }}"
+          >
+            <img [src]="imgUrl(img)" [alt]="p?.name + ' thumb ' + (i+1)" (error)="onImgError($event)"/>
+          </button>
+        </div>
+      </div>
+
+      <!-- RIGHT: Product info -->
+      <div class="pd-info">
+        <h1 class="pd-title">{{ p?.name }}</h1>
+
+        <div class="pd-meta">
+          <div class="price-row">
+            <div class="price">₹{{ p?.price | number:'1.0-0' }}</div>
+            <div class="mrp" *ngIf="p?.mrp">₹{{ p?.mrp | number:'1.0-0' }}</div>
+            <div class="discount" *ngIf="product && product.mrp != null && product.price != null && product.mrp > product.price">
+              {{ calcDiscount(product.mrp, product.price) }}% OFF
+            </div>
+          </div>
+
+          <div class="stock" [class.out]="(p?.stock ?? 0) === 0">
+            <span *ngIf="(product?.stock ?? 0) > 0">In stock: {{ p?.stock ?? 0 }}</span>
+            <span *ngIf="(product?.stock ?? 0) === 0">Out of stock</span>
+          </div>
+        </div>
+
+        <p class="subdesc" *ngIf="product?.subDescription">{{ p?.subDescription }}</p>
+
+        <div class="qty-add">
+            <div class="qty">
+  <button (click)="decreaseQty()" [disabled]="qty <= 1">−</button>
+  <input type="number" [value]="qty" (input)="onQtyInput($event)" min="1" [max]="p?.stock || 9999" />
+  <button (click)="increaseQty()" [disabled]="p.stock ? qty >= p.stock : false">+</button>
+</div>
+
+          <div class="actions">
+            <button class="btn primary" (click)="onAddToCart()" [disabled]="adding || p?.stock === 0">
+              {{ adding ? 'Adding...' : 'Add to Cart' }}
+            </button>
+            <button class="btn outline" (click)="onBuyNow()" [disabled]="p?.stock === 0">Buy Now</button>
+          </div>
+        </div>
+
+        <div class="pd-description">
+          <h3>Product Details</h3>
+          <p *ngIf="product?.description; else noDesc" [innerHTML]="formatDescription(product.description)"></p>
+          <ng-template #noDesc><p>No detailed description available.</p></ng-template>
+        </div>
+
+        <!-- optional: category / share -->
+        <div class="pd-footer">
+          <div class="category">Category: <strong>{{ p?.category }}</strong></div>
+          <div class="share">
+            <button (click)="share()">Share</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- loading skeleton -->
+<ng-template #loadingTpl>
+  <div class="loading">Loading product…</div>
+</ng-template>
+
+<!-- error -->
+<div class="error" *ngIf="error">
+  <p>Failed to load product. Try again later.</p>
+  <button (click)="loadProduct()" class="btn">Retry</button>
+</div>
