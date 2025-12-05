@@ -1,15 +1,111 @@
-<header class="navbar">
-
-  <!-- 🌿 Announcement / Offer Bar -->
-<div class="announcement-bar" *ngIf="showAnnouncement">
-  <div class="announcement-wrapper">
-    <span class="announcement-text">
-      🎉 Festive Offer: <strong>Grab upto 65% off </strong> on all herbal products!
-    </span>
-    <a routerLink="/product-list" class="announcement-link">Shop Now →</a>
+<!-- MOBILE NAVBAR -->
+<header class="mobile-navbar">
     
+  <!-- SLIDE MENU (Mobile) -->
+  <nav class="mobile-menu" [class.open]="menuOpen">
+    <!-- Menu Header -->
+  <div class="menu-header">
+    <span class="menu-title">Menu</span>
+    <button class="close-btn" (click)="closeMenu()">✕</button>
   </div>
-</div>
+  <hr class="menu-divider" />
+    <a routerLink="/" (click)="closeMenu()">Home</a>
+    <a routerLink="/product-list" (click)="closeMenu()">Shop</a>
+    <a routerLink="/blogs" (click)="closeMenu()">Blogs</a>
+    <a routerLink="/success-stories" (click)="closeMenu()">Success Stories</a>
+    <a routerLink="/about" (click)="closeMenu()">About</a>
+    <a routerLink="/contact" (click)="closeMenu()">Contact</a>
+    
+    <hr class="menu-divider" />
+    <div class="footer-contact">
+      <h3>Contact Us</h3>
+      <p><strong>Email:</strong> <a href="mailto:ayurherbals79@gmail.com">ayurherbals79@gmail.com</a></p>
+      <p><strong>Phone:</strong> <a href="tel:+919205011697">+91 9205011697</a></p>
+    </div>
+  </nav>
+   <!-- LOGO -->
+		<div class="logo">
+			<a routerLink="/" (click)="closeMenu()">
+			<img src="assets/logo.jpg" alt="Logo" class="logo-img" />
+			</a>
+		</div>
+
+  <!-- BACKDROP -->
+  <div class="menu-backdrop" *ngIf="menuOpen" (click)="closeMenu()"></div>
+
+    <!-- Right: Search + Cart + Login -->
+    <div class="nav-actions">
+      <div class="search-wrap">
+        <input
+          type="text"
+          class="search-bar"
+          placeholder="Search products..."
+          [(ngModel)]="searchQuery"
+          (input)="onQueryChanged($event.target.value)"
+          (focus)="showSuggestions = true"
+          (blur)="onSearchBlur()"
+          aria-label="Search products"
+        />
+        <button class="search-btn" (click)="onSearch()">🔍</button>
+
+        <!-- Suggestions dropdown -->
+        <ul class="suggestions" *ngIf="showSuggestions && suggestions?.length">
+          <li *ngFor="let s of suggestions" (mousedown)="selectSuggestion(s)">
+            <img *ngIf="s.images?.length" [src]="imgUrl(s.images[0])" alt="{{s.name}}" />
+            <div class="s-text">
+              <div class="s-name">{{ s.name }}</div>
+              <div class="s-sub">{{ s.subDescription || s.description }}</div>
+            </div>
+            <div class="s-price">₹{{ s.price | number:'1.0-0' }}</div>
+          </li>
+        </ul>
+      </div>
+     
+	</div>
+
+  <!-- Hamburger -->
+  <button class="hamburger" (click)="toggleMenu()">
+    ☰
+  </button>
+</header>
+
+
+
+<!-- MOBILE BOTTOM NAVIGATION -->
+<nav class="mobile-bottom-nav" role="navigation" aria-label="Mobile bottom navigation">
+  <button class="mb-btn" (click)="goHome()" aria-label="Home">
+    <span class="mb-icon">🏠</span>
+    <span class="mb-label">Home</span>
+  </button>
+
+  <button class="mb-btn" (click)="goCart()" aria-label="Cart">
+    <span class="mb-icon">🛒</span>
+    <span class="mb-label">Cart</span>
+    <span class="mb-badge" *ngIf="cartCount > 0">{{ cartCount }}</span>
+  </button>
+
+
+  <button class="mb-btn user-wrap" (click)="toggleUserMenu($event)" aria-haspopup="true" aria-expanded="{{userMenuOpen}}">
+    <span class="mb-icon user-avatar" *ngIf="userAvatarUrl; else initialsTpl">
+      <img [src]="userAvatarUrl" alt="User avatar" />
+    </span>
+    <ng-template #initialsTpl>
+      <span class="mb-initials">{{ userInitials }}</span>
+    </ng-template>
+    <span class="mb-label">Account</span>
+
+    <!-- small dropdown (optional, reuse your existing user menu markup if you have one) -->
+    <div class="mobile-user-dropdown" *ngIf="userMenuOpen" >
+     
+      <button  class="ud-item" (click)="onLogin()" >Login</button>
+      <button class="ud-item" (click)="onLogout()" *ngIf="isLoggedIn" >Logout</button>
+      <button class="ud-item" (click)="onRegister()" >Create account</button>
+    </div>
+  </button>
+</nav>
+
+<!-- DESKTOP NAVBAR -->
+<header class="desktop-navbar">
 
 
   <div class="navbar-inner">
@@ -20,14 +116,8 @@
          <img src="assets/logo.jpg" alt="Ayurs & Herbals Logo" class="logo-img" />
       </a>
     </div>
-
-    <!-- Mobile hamburger -->
-    <button class="hamburger" aria-label="Toggle menu" (click)="toggleMenu()">
-      <span [class.open]="menuOpen">☰</span>
-    </button>
-
     <!-- Center: Links (desktop) / collapsible (mobile) -->
-    <nav class="nav-links" [class.open]="menuOpen">
+    <nav class="nav-links">
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">Home</a>
       <a routerLink="/product-list" routerLinkActive="active" (click)="closeMenu()">Shop</a>
       <a routerLink="/blogs" routerLinkActive="active" (click)="closeMenu()">Blogs</a>
@@ -104,40 +194,3 @@
     </div>
   </div>
 </header>
-
-<!-- ===== Mobile Bottom Nav (insert this AFTER the header) ===== -->
-<nav class="mobile-bottom-nav" role="navigation" aria-label="Mobile bottom navigation">
-  <button class="mb-btn" (click)="goHome()" aria-label="Home">
-    <span class="mb-icon">🏠</span>
-    <span class="mb-label">Home</span>
-  </button>
-
-  <button class="mb-btn" (click)="goCart()" aria-label="Cart">
-    <span class="mb-icon">🛒</span>
-    <span class="mb-label">Cart</span>
-    <span class="mb-badge" *ngIf="cartCount > 0">{{ cartCount }}</span>
-  </button>
-
-  <button class="mb-btn" (click)="toggleMenu()" aria-label="Menu" [class.active]="menuOpen">
-    <span class="mb-icon">☰</span>
-    <span class="mb-label">Menu</span>
-  </button>
-
-  <button class="mb-btn user-wrap" (click)="toggleUserMenu($event)" aria-haspopup="true" aria-expanded="{{userMenuOpen}}">
-    <span class="mb-icon user-avatar" *ngIf="userAvatarUrl; else initialsTpl">
-      <img [src]="userAvatarUrl" alt="User avatar" />
-    </span>
-    <ng-template #initialsTpl>
-      <span class="mb-initials">{{ userInitials }}</span>
-    </ng-template>
-    <span class="mb-label">Account</span>
-
-    <!-- small dropdown (optional, reuse your existing user menu markup if you have one) -->
-    <div class="mobile-user-dropdown" *ngIf="userMenuOpen" >
-     
-      <button  class="ud-item" (click)="onLogin()" >Login</button>
-      <button class="ud-item" (click)="onLogout()" *ngIf="isLoggedIn" >Logout</button>
-      <button class="ud-item" (click)="onRegister()" >Create account</button>
-    </div>
-  </button>
-</nav>

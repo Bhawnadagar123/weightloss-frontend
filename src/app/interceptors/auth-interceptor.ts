@@ -13,7 +13,7 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = this.auth.getToken();
     // only add header for API calls to your backend (avoid adding to CDNs etc.)
-    if (token && req.url.startsWith(environment.apiBase)) {
+    if (token) {
       const cloned = req.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`

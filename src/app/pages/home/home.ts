@@ -227,27 +227,25 @@ fpTouchEnd(_ev: TouchEvent) {
 
   /* helper to build image url when showing thumbnail */
 imgUrl(path?: string) {
-  // fallback placeholder
+  // fallback
   if (!path) return '/assets/placeholder.png';
 
-  // absolute urls (http/https) - return as-is
+  // if full URL already
   if (path.startsWith('http')) return path;
 
-  // If path already begins with /files we will return as-is to allow Angular dev proxy to forward it:
-  // e.g. "/files/products/abcd.jpg" -> /files/products/abcd.jpg (proxied to backend)
-  if (path.startsWith('/files')) {
-    return path;
-  }
+  // ensure no leading slash problem
+  path = path.replace(/^\//, '');
 
-  // otherwise, prefix environment.apiBase (useful for server rendered or production urls)
-  const base = environment.apiBase?.replace(/\/$/, ''); // remove trailing slash if any
-  return (base ? base : '') + (path.startsWith('/') ? path : '/' + path);
+  // backend base URL from environment.ts
+  const api = environment.apiBase; // example: "http://localhost:8080"
+
+  // final: http://localhost:8080/files/products/xxxxx.jpg
+  return `${api}/${path}`;
 }
 
 onImgError(event: any) {
   event.target.src = '/assets/Slim_belly_fit1.jpg';
 }
-
   shorten(text?: string | null, max = 140) {
     if (!text) return '';
     const str = text.replace(/<\/?[^>]+(>|$)/g, ''); // strip HTML tags

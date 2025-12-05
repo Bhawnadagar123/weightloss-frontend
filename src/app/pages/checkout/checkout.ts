@@ -109,6 +109,10 @@ export class Checkout implements OnInit {
 
   onPlaceOrder(e: Event) {
     e.preventDefault();
+    console.log('Placing order — token:', this.auth.getToken());
+    console.log("on place order: ", e);
+    console.log("cart item: " , this.cart.items);
+    console.log("first name: ", this.firstName);
     this.error = null;
 
     if (!this.cart.items || this.cart.items.length === 0) { this.error = 'Cart is empty'; return; }
@@ -129,7 +133,7 @@ export class Checkout implements OnInit {
         return;
       }
     }
-
+    console.log("User ID: ", this.auth.getUserId());
     const uid = this.auth.getUserId();
     if (!uid) { this.router.navigate(['/login'], { queryParams: { next: '/checkout' }}); return; }
 
@@ -138,7 +142,10 @@ export class Checkout implements OnInit {
       paymentMethod: this.paymentMethod || 'COD',
       shippingAddress: this.shippingAddress.trim()
     };
-
+console.log("User ID: ", uid);
+console.log("paymentMethod: ", this.paymentMethod);
+console.log("shippingAddress: ", this.shippingAddress.trim());
+console.log("payload: ", payload);
     this.placing = true;
     this.orderService.placeOrder(payload).pipe(finalize(() => this.placing = false)).subscribe({
       next: (res) => {
@@ -158,8 +165,10 @@ export class Checkout implements OnInit {
         });
       },
       error: (err) => {
-        console.error('Place order failed', err);
-        this.error = err?.error?.message || err?.message || 'Failed to place order. Try again';
+        console.error('Place Order failed — full error:', err);
+      console.error('HTTP status:', err?.status);
+      console.error('Response body:', err?.error);
+      this.error = err?.error?.message || err?.message || 'Failed to place order. Try again'
       }
     });
   }

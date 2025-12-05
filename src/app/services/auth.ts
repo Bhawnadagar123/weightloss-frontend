@@ -14,8 +14,11 @@ interface LoginResp {
 export class AuthService {
   private tokenKey = 'auth_token';
   private tokenTypeKey = 'auth_type';
+  private logoutTimer: any = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.startTokenExpiryWatcher();
+  }
 
   register(name: string, email: string, password: string): Observable<any> {
     const payload = { name, email, password };
@@ -33,22 +36,44 @@ export class AuthService {
       );
   }
 
+  private startTokenExpiryWatcher() {
+  const token = this.getToken();
+  if (!token) return;
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const exp = payload.exp * 1000; // convert to ms
+    const now = Date.now();
+
+    const timeLeft = exp - now;
+
+    if (timeLeft <= 0) {
+      this.removeToken();
+      return;
+    }
+
+    // Auto logout when expiry time reached
+    this.logoutTimer = setTimeout(() => {
+      this.removeToken();
+    }, timeLeft);
+
+  } catch {}
+}
   setToken(token: string, tokenType = 'Bearer') {
   localStorage.setItem(this.tokenKey, token);
   localStorage.setItem(this.tokenTypeKey, tokenType);
 
-  // Broadcast auth change so components (navbar etc.) update immediately.
-  // We dispatch a custom event 'authChanged' and also a storage event for listeners that rely on it.
-  // Broadcast auth change to same-tab listeners
-  try {
-    window.dispatchEvent(new CustomEvent('authChanged', { detail: { token } }));
-  } catch (e) {
-    console.debug('auth event dispatch failed', e);
-  }
+  this.startTokenExpiryWatcher();
+
+  window.dispatchEvent(new CustomEvent('authChanged', { detail: { token } }));
 }
 
-  getToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
+   getToken(): string | null {
+    try {
+      return localStorage.getItem('auth_token'); // adapt key to your app
+    } catch {
+      return null;
+    }
   }
 
   getTokenType(): string {
@@ -59,17 +84,37 @@ export class AuthService {
   localStorage.removeItem(this.tokenKey);
   localStorage.removeItem(this.tokenTypeKey);
 
-  // Broadcast logout
-  try {
-    window.dispatchEvent(new CustomEvent('authChanged', { detail: { token: null } }));
-  } catch (e) {
-    console.debug('auth event dispatch failed', e);
+  if (this.logoutTimer) {
+    clearTimeout(this.logoutTimer);
+    this.logoutTimer = null;
   }
+
+  window.dispatchEvent(new CustomEvent('authChanged', { detail: { token: null } }));
 }
 
   isLoggedIn(): boolean {
-    return !!this.getToken();
+  const token = this.getToken();
+  if (!token) return false;
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const exp = payload.exp; // expiry in seconds
+
+    if (!exp) return true; // if token doesn't have exp claim
+
+    const now = Math.floor(Date.now() / 1000);
+
+    if (exp < now) {
+      this.removeToken();   // ❌ token expired → remove it
+      return false;
+    }
+
+    return true;
+  } catch {
+    this.removeToken();
+    return false;
   }
+}
 
   // Try to decode userId from JWT payload (base64url)
   getUserId(): number | null {

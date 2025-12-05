@@ -57,12 +57,12 @@ input[type="text"], input[type="tel"], input[type="number"], textarea, select {
 textarea { resize: vertical; min-height: 84px; }
 
 /* small hints and errors */
-.hint { display:block; color: #c77; font-size: 0.85rem; margin-top:6px; }
+.hint { display:block; color: black; font-size: 0.85rem; margin-top:6px; }
 .error { color:#c53030; margin-top:10px; font-weight:700; }
 
 /* address action buttons */
 .addr-actions { display:flex; gap:10px; margin:8px 0 12px; align-items:center; }
-.btn { padding:10px 14px; border-radius:8px; border:none; cursor:pointer; font-weight:700; background:var(--accent); color:#fff; }
+.btn { padding:10px 14px; border-radius:8px; border:none; cursor:pointer; font-weight:700; background:#e78686; color:black; }
 .btn.outline { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
 .link { background: transparent; border:none; color:var(--accent); cursor:pointer; font-weight:600; }
 
@@ -74,7 +74,7 @@ textarea { resize: vertical; min-height: 84px; }
 
 /* form actions */
 .actions { margin-top:16px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
-button[type="submit"] { background:var(--accent); color:#fff; padding:10px 18px; border-radius:8px; border:none; cursor:pointer; font-weight:700; }
+button[type="submit"] { background:#e78686; color:#050505; padding:10px 18px; border-radius:8px; border:none; cursor:pointer; font-weight:700; }
 button.link { background:transparent; border:none; color:var(--accent); cursor:pointer; }
 
 /* small screens improvements */
