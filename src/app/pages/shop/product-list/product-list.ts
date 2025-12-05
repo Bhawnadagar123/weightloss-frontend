@@ -5,6 +5,7 @@ import { Product } from '../../../models/product.model';
 import { CartService } from '../../../services/cart';
 import { ProductService } from '../../../services/product';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-product-list',
@@ -128,13 +129,37 @@ export class ProductList implements OnInit, OnDestroy {
   }
 
   imgUrl(path?: string) {
-    if (!path) return '/assets/placeholder.png';
-    if (/^https?:\/\//i.test(path)) return path;
-    // return as-is (proxy configured) or prefix base in production
-    return path.startsWith('/') ? path : '/' + path;
+  // fallback local asset
+  if (!path) return '/assets/placeholder.png';
+
+  // if absolute URL already
+  if (/^https?:\/\//i.test(path)) return path;
+
+  // normalize leading slashes
+  path = path.replace(/^\/+/, '');
+
+  const api = (environment.apiBase || '').replace(/\/+$/, '');
+
+  // if caller passed files/... already
+  if (path.startsWith('files/')) {
+    return `${api}/${path}`; // http://localhost:8080/files/products/xxx.jpg
   }
 
+  // if caller passed products/... assume files prefix
+  if (path.startsWith('products/') || path.startsWith('uploads/')) {
+    return `${api}/files/${path}`;
+  }
+
+  // angular asset path
+  if (path.startsWith('assets/')) {
+    return `/${path}`;
+  }
+
+  // default fallback - assume file under files/
+  return `${api}/files/${path}`;
+}
+
   onImgError(event: any) {
-    event.target.src = '/assets/placeholder.png';
+    event.target.src = '/assets/Slim_belly_fit1.jpg';
   }
 }

@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { Product } from '../../../models/product.model';
 import { CartService } from '../../../services/cart';
 import { ProductService } from '../../../services/product';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-product-detail',
@@ -157,15 +158,42 @@ this.cartService.addToCart(pid, this.qty).subscribe({
   }
 
   // utils
-  imgUrl(path?: string) {
+   imgUrl(path?: string) {
+    // fallback local asset
     if (!path) return '/assets/placeholder.png';
+  
+    // if absolute URL already
     if (/^https?:\/\//i.test(path)) return path;
-    return path.startsWith('/') ? path : '/' + path;
+  
+    // normalize leading slashes
+    path = path.replace(/^\/+/, '');
+  
+    const api = (environment.apiBase || '').replace(/\/+$/, '');
+  
+    // if caller passed files/... already
+    if (path.startsWith('files/')) {
+      return `${api}/${path}`; // http://localhost:8080/files/products/xxx.jpg
+    }
+  
+    // if caller passed products/... assume files prefix
+    if (path.startsWith('products/') || path.startsWith('uploads/')) {
+      return `${api}/files/${path}`;
+    }
+  
+    // angular asset path
+    if (path.startsWith('assets/')) {
+      return `/${path}`;
+    }
+  
+    // default fallback - assume file under files/
+    return `${api}/files/${path}`;
   }
+  
+    onImgError(event: any) {
+      event.target.src = '/assets/Slim_belly_fit1.jpg';
+    }
 
-  onImgError(event: any) {
-    event.target.src = '/assets/placeholder.png';
-  }
+  
 
   calcDiscount(mrp: number, price: number) {
     if (!mrp || mrp <= price) return 0;

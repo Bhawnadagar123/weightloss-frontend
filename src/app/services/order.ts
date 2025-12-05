@@ -16,7 +16,7 @@ export class OrderService {
   constructor(private http: HttpClient) {}
 
   placeOrder(payload: PlaceOrderReq): Observable<any> {
-    return this.http.post<any>(`${this.base}/api/orders/place`, payload);
+    return this.http.post<any>(`${this.base}/api/orders/place`, payload, { withCredentials: true });
   }
 
   // optionally a get order by id if backend supports it

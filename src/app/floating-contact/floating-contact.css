@@ -21,7 +21,7 @@
   position: relative;
   width: 54px;
   height: 54px;
-  background: #fff;
+  background: #e78686;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -81,7 +81,7 @@
   /* assume mobile bottom nav ~56-68px tall; push floating buttons above it */
   .floating-buttons {
     /* 72px is safe for many bottom navs; add safe-area-inset-bottom for iPhone */
-    bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    bottom: calc(90px + env(safe-area-inset-bottom, 0px));
     right: 12px;
     left: auto; /* keep on right by default */
     gap: 12px;

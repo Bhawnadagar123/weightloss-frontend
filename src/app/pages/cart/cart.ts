@@ -5,6 +5,7 @@ import { CartService } from '../../services/cart';
 import { ProductService } from '../../services/product';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { debounceTime, Subscription } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-cart',
@@ -75,15 +76,41 @@ export class Cart implements OnInit {
   }
 
   imgUrl(path?: string) {
-    if (!path) return '/assets/placeholder.png';
-    if (/^https?:\/\//i.test(path)) return path;
-    // rely on dev proxy or environment.apiBase
-    return path.startsWith('/') ? path : '/' + path;
+  // fallback local asset
+  if (!path) return '/assets/placeholder.png';
+
+  // already absolute URL: use as-is
+  if (/^https?:\/\//i.test(path)) return path;
+
+  // strip leading slashes
+  path = path.replace(/^\/+/, '');
+
+  // ensure environment.apiBase exists and has no trailing slash
+  const api = (environment.apiBase || '').replace(/\/+$/, '');
+
+  // if caller passed something already starting with "files/"
+  if (path.startsWith('files/')) {
+    return `${api}/${path}`;    // http://localhost:8080/files/products/xxx.jpg
   }
+
+  // if caller passed "products/..." or "uploads/..." assume files/ prefix
+  if (path.startsWith('products/') || path.startsWith('uploads/')) {
+    return `${api}/files/${path}`;
+  }
+
+  // if it's an Angular asset path
+  if (path.startsWith('assets/')) {
+    return `/${path}`;          // /assets/placeholder.png
+  }
+
+  // fallback: assume it's a file under /files
+  return `${api}/files/${path}`;
+}
+
   
 
   onImgError(ev: any) {
-    ev.target.src = '/assets/placeholder.png';
+    ev.target.src = '/assets/Slim_belly_fit1.jpg';
   }
 
   // ... rest stays same but ensure calls to cartService use no userId param (or null)

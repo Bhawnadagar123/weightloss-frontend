@@ -1,3 +1,114 @@
+/* Hide on desktop */
+@media (min-width: 768px) {
+  .mobile-navbar,
+  .mobile-menu,
+  .mobile-bottom-nav {
+    display: none !important;
+  }
+}
+
+/* MOBILE NAVBAR HEADER */
+.mobile-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 55px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 2px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 2000;
+  gap:50px;
+}
+
+
+
+.cart-icon span {
+  font-size: 10px;
+  background: red;
+  color: white;
+  border-radius: 50%;
+  padding: 1px 5px;
+}
+
+/* SLIDE MENU */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: -290px;
+  width: 260px;
+  height: 100%;
+  background: #e78686;
+  box-shadow: 0px 0 10px rgba(0,0,0,0.2);
+  padding: 15px;
+  transition: left 0.3s ease;
+  z-index: 1100;
+}
+
+.mobile-menu.open {
+  left: 0;
+}
+
+.menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.menu-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 22px;
+}
+
+.mobile-menu a {
+  display: block;
+  padding: 10px 0;
+  font-size: 16px;
+  text-decoration: none;
+  color: #333;
+}
+
+.menu-divider {
+  margin: 10px 0;
+  border: none;
+  border-top: 2px solid white;
+}
+
+.footer-contact h3 {
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.footer-contact p {
+  font-size: 13px;
+}
+
+/* BOTTOM MOBILE NAVIGATION */
+.mobile-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  background: #ffffff;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-top: 1px solid #ddd;
+  z-index: 1200;
+}
+
+.mobile-bottom-nav a {
+  font-size: 22px;
+}
+
+/* Desktop navbar hidden on mobile */
 /* navbar.component.css */
 
 /* ROOT CONTAINER */
@@ -165,13 +276,7 @@
   border-radius: 8px; /* optional if your logo has corners */
   flex-shrink: 0;
 }
-.logo h2 {
-  margin: 0;
-  color: #2e7d32; /* herbal green */
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1;
-}
+
 
 /* HAMBURGER (MOBILE) */
 .hamburger {
@@ -406,7 +511,7 @@
   right: 0;
   bottom: 0;
   padding: env(safe-area-inset-bottom, 8px) 8px 8px;
-  background: #fff;
+  background: #e78686;
   border-top: 1px solid #eee;
   box-shadow: 0 -6px 18px rgba(0,0,0,0.06);
   z-index: 1400; /* above header content */
@@ -462,7 +567,7 @@
 .user-avatar img { width:30px; height:30px; border-radius:999px; object-fit:cover; }
 
 /* label below icon */
-.mb-label { font-size: 11px; color: #333; }
+.mb-label { font-size: 13px; color: #333; }
 
 /* badge for cart count */
 .mb-badge {
@@ -506,12 +611,6 @@
 /* ----- hide top right heavy actions on small screens ----- */
 @media (max-width: 767px) {
 
-  /* keep header layout compact */
-  .navbar-inner {
-    padding: 6px 12px;
-    align-items: center;
-    gap: 8px;
-  }
 
   /* show hamburger, logo as usual */
   .hamburger { display: inline-block; }
@@ -537,7 +636,7 @@
   .nav-actions {
     display: flex !important;
     align-items: center;
-    gap: 8px;
+    gap: 50px;
     margin-left: auto;
   }
 
@@ -604,4 +703,3 @@
 @media (min-width: 768px) {
   .mobile-bottom-nav { display: none; }
 }
-
